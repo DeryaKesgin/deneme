@@ -8,16 +8,16 @@ pipeline {
         DOCKERHUB_REPO = 'your-dockerhub-username/demo12' // Docker Hub repository
     }
     stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/DeryaKesgin/jenkinsdeneme'
+            }
+        }
         stage('Build Maven') {
             steps {
-                checkout scmGit(
-                    branches: [[name: '*/main']],
-                    userRemoteConfigs: [[url: 'https://github.com/DeryaKesgin/jenkinsdeneme']]
-                )
                 bat 'mvn clean install'
             }
         }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -25,7 +25,6 @@ pipeline {
                 }
             }
         }
-
         stage('Push Image to Docker Hub') {
             steps {
                 script {
@@ -35,7 +34,6 @@ pipeline {
                 }
             }
         }
-
         stage('Run Docker Container') {
             steps {
                 script {
